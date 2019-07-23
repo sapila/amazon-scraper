@@ -9,17 +9,36 @@ EXPOSE 80
 
 WORKDIR /scraping-service
 
-RUN apt-get update && apt-get install -y --no-install-recommends apt-utils git zip unzip
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
 
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php -r "if (hash_file('sha384', 'composer-setup.php') === '48e3236262b34d30969dca3c37281b3b4bbe3221bda826ac6a9a62d6444cdb0dcd0615698a5cbe587c3f0fe57a54d8f5') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" && \
-    php composer-setup.php && \
-    php -r "unlink('composer-setup.php');" && \
-    mv composer.phar /usr/local/bin/composer
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    libxml2-dev \
+    libmcrypt-dev \
+    git \
+    zip \
+    unzip \
+    curl
+
+# Install extensions
+RUN docker-php-ext-install pdo_mysql mbstring zip bcmath json ctype xml tokenizer
+
+# Install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY composer.json /scraping-service
 COPY composer.lock /scraping-service
-
 RUN composer install
 
 COPY ./ /scraping-service
+
+RUN chmod 777 /scraping-service/boot.sh
+
+# Install ToR
+RUN apt-get update && apt-get install -y tor  && echo "ControlPort 9051 \nHashedControlPassword 16:D90AD188E67A15586040D7C829A935E01C654986EA6C11BA680959D534" >> /etc/tor/torrc
+
+CMD [ "/bin/bash", "/scraping-service/boot.sh" ]
