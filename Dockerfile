@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     libzip-dev \
+    zlib1g-dev \
+    chromium \
     libxml2-dev \
     libmcrypt-dev \
     git \
