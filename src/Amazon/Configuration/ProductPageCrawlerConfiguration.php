@@ -1,8 +1,8 @@
 <?php
 
-namespace ScrapingService\Amazon\Scraper;
+namespace ScrapingService\Amazon\Configuration;
 
-class AmazonScraperConfiguration
+class ProductPageCrawlerConfiguration
 {
     /**
      * @var string
@@ -18,7 +18,7 @@ class AmazonScraperConfiguration
     private $title;
 
     /**
-     * AmazonScraperConfiguration constructor.
+     * ProductPageCrawlerConfiguration constructor.
      */
     public function __construct(string $locale, string $asin, ?string $title)
     {

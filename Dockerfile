@@ -5,6 +5,8 @@ ENV APACHE_DOCUMENT_ROOT /scraping-service/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
 RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+RUN a2enmod rewrite
+
 EXPOSE 80
 
 WORKDIR /scraping-service
@@ -32,15 +34,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-COPY composer.json /scraping-service
-COPY composer.lock /scraping-service
+COPY ./ /scraping-service
 RUN composer install
 
-COPY ./ /scraping-service
 
-RUN chmod 777 /scraping-service/boot.sh
-
-# Install ToR
-RUN apt-get update && apt-get install -y tor  && echo "ControlPort 9051 \nHashedControlPassword 16:D90AD188E67A15586040D7C829A935E01C654986EA6C11BA680959D534" >> /etc/tor/torrc
-
-CMD [ "/bin/bash", "/scraping-service/boot.sh" ]
+CMD [ "/bin/bash", "apache2-foreground" ]

@@ -1,3 +1,3 @@
-index:
-    path: /
-    controller: ScrapingService\Controller\DefaultController::index
+amazon:
+    path: /api/v1/amazon/{locale}/{asin}
+    controller: ScrapingService\Controller\AmazonController::getProduct
