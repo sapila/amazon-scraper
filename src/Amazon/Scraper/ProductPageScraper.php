@@ -36,7 +36,7 @@ class ProductPageScraper
 
     private function scrapeTitle(): string
     {
-        return trim($this->crawler->filter('#productTitle')->text());
+        return trim($this->crawler->filter('#productTitle')->text(''));
     }
 
     private function scrapeImages(): array
@@ -73,7 +73,7 @@ class ProductPageScraper
     {
         $features = $this->crawler->filter('#featurebullets_feature_div #feature-bullets ul li span')
             ->each(function(Crawler $node, $i) {
-                $feature = trim($node->text());
+                $feature = trim($node->text(''));
 
                 // TODO: check for that
                 $skipStrings = [
@@ -111,12 +111,12 @@ class ProductPageScraper
 
     private function scrapeBrand(): ?string
     {
-        return $this->crawler->filter('#bylineInfo')->text();
+        return $this->crawler->filter('#bylineInfo')->text('');
     }
 
     private function scrapeAvailability(): bool
     {
-        $availability = trim($this->crawler->filter('#availability span')->text());
+        $availability = trim($this->crawler->filter('#availability span')->text(''));
 
         if ($availability == 'Auf Lager.') {
             return true;
@@ -164,7 +164,11 @@ class ProductPageScraper
 
     public function scrapeDeliveryDate(): ?string
     {
-        $deliveryDateBox = $this->crawler->filter('#ddmDeliveryMessage')->text();
+        $deliveryDateBox = $this->crawler->filter('#ddmDeliveryMessage')->text('');
+
+        if ($deliveryDateBox === '') {
+            return '';
+        }
 
         $months = ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'];
 

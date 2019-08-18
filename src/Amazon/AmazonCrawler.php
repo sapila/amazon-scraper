@@ -3,7 +3,6 @@
 namespace ScrapingService\Amazon;
 
 use ScrapingService\Amazon\Configuration\ProductPageCrawlerConfiguration;
-use ScrapingService\Amazon\Scraper\ProductPageScraper;
 use Symfony\Component\Panther\Client;
 
 class AmazonCrawler
@@ -21,13 +20,26 @@ class AmazonCrawler
         $this->client = $client;
     }
 
-    public function scrap(ProductPageCrawlerConfiguration $configuration): Product
+    /**
+     * @param Client $client
+     */
+    public function setClient(Client $client): void
+    {
+        $this->client = $client;
+    }
+
+    public function crawl(ProductPageCrawlerConfiguration $configuration): string
     {
         $crawler = $this->client->request(
             'GET',
             'https://www.amazon.' . $configuration->getLocale() . '/dp/' . $configuration->getAsin()
         );
 
-        return (new ProductPageScraper())->scrapProduct($crawler->html());
+        return $crawler->html();
+    }
+
+    public function quit(): void
+    {
+        $this->client->quit();
     }
 }
