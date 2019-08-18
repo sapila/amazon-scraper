@@ -21,7 +21,7 @@ class AmazonController
         $crawler = new AmazonCrawler(
             Client::createChromeClient(
                 null,
-                ['--headless','--disable-gpu', '--no-sandbox']
+                ['--headless', '--disable-gpu', '--no-sandbox', '--proxy-server=37.97.228.147:24000']
             )
         );
 

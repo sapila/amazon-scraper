@@ -135,14 +135,14 @@ class ProductPageScraper
         $links = [];
         $this->crawler->filter('#shipsFromSoldByInsideBuyBox_feature_div div #merchant-info a')
             ->each(function (Crawler $node, $i) use (&$links) {
-                $links[] = $node->html();
+                $links[] = $node->html('');
             });
 
         // Amazon seller - dispatcher
         if (count($links) === 0) {
-            $sellerDispatchText = trim($this->crawler->filter('#shipsFromSoldByInsideBuyBox_feature_div div #merchant-info')->html());
+            $sellerDispatchText = trim($this->crawler->filter('#shipsFromSoldByInsideBuyBox_feature_div div #merchant-info')->html(''));
             preg_match('/.*Verkauf und Versand durch (?<vendor>.*)\./', $sellerDispatchText, $matches);
-            $seller = $dispatchedBy = $matches['vendor'];
+            $seller = $dispatchedBy = $matches['vendor'] ?? '';
         }
 
         // Same seller - dispatcher
