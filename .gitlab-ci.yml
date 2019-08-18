@@ -11,7 +11,7 @@ build:container:
   image: docker
   stage: build
   only:
-    - tor
+    - master
   before_script:
     - docker info
     - echo "$GCLOUD_SERVICE_ACCOUNT_KEY" > key.json
@@ -24,7 +24,7 @@ deploy:container:
   image: google/cloud-sdk:slim
   stage: deploy
   only:
-    - tor
+    - master
   before_script:
     - echo "$GCLOUD_SERVICE_ACCOUNT_KEY" > key.json
     - gcloud auth activate-service-account --key-file=key.json
