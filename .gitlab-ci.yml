@@ -1,0 +1,35 @@
+image: docker:stable
+
+services:
+  - docker:dind
+
+stages:
+  - build
+  - deploy
+
+build:container:
+  image: docker
+  stage: build
+  only:
+    - tor
+  before_script:
+    - docker info
+    - echo "$GCLOUD_SERVICE_ACCOUNT_KEY" > key.json
+    - cat key.json | docker login -u _json_key --password-stdin https://eu.gcr.io
+  script:
+    - docker build -t eu.gcr.io/scraping-service-credit/scraping-service:php .
+    - docker push eu.gcr.io/scraping-service-credit/scraping-service:php
+
+deploy:container:
+  image: google/cloud-sdk:slim
+  stage: deploy
+  only:
+    - tor
+  before_script:
+    - echo "$GCLOUD_SERVICE_ACCOUNT_KEY" > key.json
+    - gcloud auth activate-service-account --key-file=key.json
+    - gcloud config set account gitlab-ci@scraping-service-credit.iam.gserviceaccount.com
+    - gcloud config set project scraping-service-credit
+    - gcloud config set compute/zone europe-west3-b
+  script:
+    - gcloud compute instances update-container scraping-service-tor-vm-1 --container-image eu.gcr.io/scraping-service-credit/scraping-service:php
