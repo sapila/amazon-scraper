@@ -3,13 +3,14 @@
 namespace ScrapingService\Controller;
 
 use Psr\Log\LoggerInterface;
+use ScrapingService\Amazon\AmazonChromeCrawler;
 use ScrapingService\Amazon\AmazonCrawler;
+use ScrapingService\Amazon\AmazonGuzzleCrawler;
 use ScrapingService\Amazon\Configuration\ProductPageCrawlerConfiguration;
 use ScrapingService\Amazon\Scraper\ProductPageScraper;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Panther\Client;
 
 class AmazonController
 {
@@ -22,20 +23,10 @@ class AmazonController
         );
 
         try {
-
-            $client = Client::createChromeClient(
-                null,
-                ['--headless', '--disable-gpu', '--no-sandbox', '—-timeout=30000', '--proxy-server=37.97.228.147:24000']
-            );
-
-            $logger->info('Chrome started');
-
             // Inject this later
-            $crawler = new AmazonCrawler($client);
+            $crawler = $this->getCrawler();
             $productHtml = $crawler->crawl($configuration);
             $logger->info('Got HTML. length : ' . (strlen($productHtml) > 250 ? 'got some page' : ' got les than 250'));
-            $crawler->quit();
-
             $product = (new ProductPageScraper())->scrapProduct($productHtml);
 
         } catch (\Throwable $e) {
@@ -44,5 +35,10 @@ class AmazonController
         }
 
         return new JsonResponse($product->toArray(), 200);
+    }
+
+    private function getCrawler(): AmazonCrawler
+    {
+        return new AmazonGuzzleCrawler();
     }
 }
