@@ -40,6 +40,7 @@ class AmazonCrawler
 
     public function quit(): void
     {
+        $this->client->close();
         $this->client->quit();
     }
 }

@@ -32,4 +32,4 @@ deploy:container:
     - gcloud config set project scraping-service-credit
     - gcloud config set compute/zone europe-west3-b
   script:
-    - gcloud compute instances update-container scraping-service-tor-vm-1 --container-image eu.gcr.io/scraping-service-credit/scraping-service:php
+    - gcloud compute instances update-container scraping-service-vm-small-php-1 --container-image eu.gcr.io/scraping-service-credit/scraping-service:php
