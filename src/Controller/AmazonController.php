@@ -39,6 +39,6 @@ class AmazonController
 
     private function getCrawler(): AmazonCrawler
     {
-        return new AmazonChromeCrawler();
+        return new AmazonGuzzleCrawler();
     }
 }
