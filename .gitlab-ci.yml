@@ -30,6 +30,6 @@ deploy:container:
     - gcloud auth activate-service-account --key-file=key.json
     - gcloud config set account gitlab-ci@scraping-service-credit.iam.gserviceaccount.com
     - gcloud config set project scraping-service-credit
-    - gcloud config set compute/zone europe-west3-b
+    - gcloud config set compute/zone europe-west3-a
   script:
     - gcloud compute instances update-container scraping-service-vm-small-php-1 --container-image eu.gcr.io/scraping-service-credit/scraping-service:php
