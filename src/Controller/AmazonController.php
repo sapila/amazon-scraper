@@ -33,7 +33,7 @@ class AmazonController
             // Inject this later
             $crawler = new AmazonCrawler($client);
             $productHtml = $crawler->crawl($configuration);
-            $logger->info('Got HTML. length : ' . strlen($productHtml) . ' ' . $productHtml);
+            $logger->info('Got HTML. length : ' . (strlen($productHtml) > 250 ? 'got some page' : ' got les than 250'));
             $crawler->quit();
 
             $product = (new ProductPageScraper())->scrapProduct($productHtml);
