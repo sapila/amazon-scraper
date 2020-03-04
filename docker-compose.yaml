@@ -4,8 +4,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8040:80"
+    container_name: amazon-scraping-service
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.amazon-scraping-service.entrypoints=web, websecure"
+      - "traefik.http.routers.amazon-scraping-service.rule=Host(`app.minotaurlogistics.com`) && PathPrefix(`/api/amazon-scraping`)"
+      - "traefik.http.routers.amazon-scraping-service.service=amazon-scraping-service"
+      - "traefik.http.services.amazon-scraping-service.loadbalancer.server.port=80"
     working_dir: /scraping-service
     volumes:
       - ".:/scraping-service"
+    networks:
+      - traefik_traefik
+networks:
+  traefik_traefik:
+    external: true

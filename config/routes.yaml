@@ -1,3 +1,3 @@
 amazon:
-    path: /api/v1/amazon/{locale}/{asin}
+    path: /api/amazon-scraping/{locale}/{asin}
     controller: ScrapingService\Controller\AmazonController::getProduct
