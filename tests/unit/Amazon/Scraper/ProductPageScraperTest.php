@@ -3,13 +3,13 @@
 namespace ScrapingService\Tests\unit\Amazon\Scraper;
 
 use ScrapingService\Amazon\Product;
-use ScrapingService\Amazon\Scraper\ProductPageScraper;
+use ScrapingService\Amazon\Scraper\GermanProductPageScraper;
 use Symfony\Component\Panther\PantherTestCase;
 
 class ProductPageScraperTest extends PantherTestCase
 {
     /**
-     * @var ProductPageScraper
+     * @var GermanProductPageScraper
      */
     private $scraper;
 
@@ -23,7 +23,7 @@ class ProductPageScraperTest extends PantherTestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->scraper = new ProductPageScraper();
+        $this->scraper = new GermanProductPageScraper();
         $this->product1 = $this->scraper->scrapProduct(
             file_get_contents(__DIR__ . '/../../../fictures/Amazon/Scraper/B07H9V2888.html')
         );

@@ -2,10 +2,10 @@
 
 namespace ScrapingService\Amazon\Scraper;
 
-use ScrapingService\Amazon\Product;
+use ScrapingService\Amazon\DTO\Product;
 use Symfony\Component\DomCrawler\Crawler;
 
-class ProductPageScraper
+class GermanProductPageScraper implements PageScraper
 {
     /**
      * @var Crawler

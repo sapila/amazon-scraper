@@ -1,24 +1,30 @@
 <?php
 
-namespace ScrapingService\Amazon\Configuration;
+namespace ScrapingService\Controller\Request;
 
-class ProductPageCrawlerConfiguration
+use ScrapingService\Amazon\Configuration\CrawlerConfiguration;
+use Symfony\Component\Validator\Constraints as Assert;
+
+class ProductRequest implements CrawlerConfiguration
 {
     /**
+     * @Assert\EqualTo(value="de", message="Only 'de' is currently supported.")
      * @var string
      */
-    private $locale;
+    public $locale;
+
     /**
      * @var string
      */
-    private $asin;
+    public $asin;
+
     /**
      * @var string|null
      */
-    private $title;
+    public $title;
 
     /**
-     * ProductPageCrawlerConfiguration constructor.
+     * ProductRequest constructor.
      */
     public function __construct(string $locale, string $asin, ?string $title)
     {

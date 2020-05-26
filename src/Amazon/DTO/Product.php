@@ -1,6 +1,6 @@
 <?php
 
-namespace ScrapingService\Amazon;
+namespace ScrapingService\Amazon\DTO;
 
 class Product
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace ScrapingService\Amazon;
+namespace ScrapingService\Amazon\Crawler;
 
-use ScrapingService\Amazon\Configuration\ProductPageCrawlerConfiguration;
+use ScrapingService\Amazon\Configuration\CrawlerConfiguration;
 use Symfony\Component\Panther\Client;
 
-class AmazonChromeCrawler implements AmazonCrawler
+class ChromeCrawler implements Crawler
 {
-    public function crawl(ProductPageCrawlerConfiguration $configuration): string
+    public function crawl(CrawlerConfiguration $configuration): string
     {
         $client = Client::createChromeClient(
             null,

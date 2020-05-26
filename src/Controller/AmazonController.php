@@ -2,43 +2,37 @@
 
 namespace ScrapingService\Controller;
 
-use Psr\Log\LoggerInterface;
-use ScrapingService\Amazon\AmazonChromeCrawler;
-use ScrapingService\Amazon\AmazonCrawler;
-use ScrapingService\Amazon\AmazonGuzzleCrawler;
-use ScrapingService\Amazon\Configuration\ProductPageCrawlerConfiguration;
-use ScrapingService\Amazon\Scraper\ProductPageScraper;
+use ScrapingService\Amazon\Service\AmazonService;
+use ScrapingService\Controller\Request\ProductRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AmazonController
 {
-    public function getProduct(Request $request,LoggerInterface $logger)
+    public function getProduct(Request $request,ValidatorInterface $validator, AmazonService $amazonService)
     {
-        $configuration = new ProductPageCrawlerConfiguration(
+        $productRequest = new ProductRequest(
             $request->get('locale'),
             $request->get('asin'),
             $request->get('title')
         );
 
-        try {
-            // Inject this later
-            $crawler = $this->getCrawler();
-            $productHtml = $crawler->crawl($configuration);
-            $logger->info('Got HTML. length : ' . (strlen($productHtml) > 250 ? 'got some page' : ' got les than 250'));
-            $product = (new ProductPageScraper())->scrapProduct($productHtml);
+        $errors = $validator->validate($productRequest);
 
-        } catch (\Throwable $e) {
-            $logger->error('ERROR: ' . $e->getMessage() . ' STACK : ' . $e->getTraceAsString());
-            return new Response($e->getMessage(), 500);
+        if (count($errors) > 0) {
+            $errorCollection = array();
+            foreach($errors as $error){
+                /** @var $error ConstraintViolationInterface */
+                $errorCollection[$error->getPropertyPath()] = $error->getMessage();
+            }
+            return new JsonResponse($errorCollection);
         }
 
-        return new JsonResponse($product->toArray(), 200);
-    }
+        $product = $amazonService->fetch($productRequest);
 
-    private function getCrawler(): AmazonCrawler
-    {
-        return new AmazonGuzzleCrawler();
+        return new JsonResponse($product->toArray(), 200);
     }
 }
