@@ -3,10 +3,9 @@
 namespace ScrapingService\Controller;
 
 use ScrapingService\Amazon\Service\AmazonService;
-use ScrapingService\Controller\Request\ProductRequest;
+use ScrapingService\Amazon\Request\ProductRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 

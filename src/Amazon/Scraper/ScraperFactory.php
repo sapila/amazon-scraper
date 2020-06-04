@@ -4,15 +4,13 @@
 namespace ScrapingService\Amazon\Scraper;
 
 
-use ScrapingService\Amazon\DTO\Product;
-
-class ScraperFacade
+class ScraperFactory
 {
-    public function scrapProduct(string $html, string $locale): Product
+    public function getForLocale(string $locale): PageScraper
     {
         switch ($locale) {
             case PageScraper::DE:
-                return (new GermanProductPageScraper())->scrapProduct($html);
+                return new GermanProductPageScraper();
             default:
                 throw new \Exception('Unsupported locale.');
         }

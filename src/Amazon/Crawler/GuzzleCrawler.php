@@ -3,7 +3,7 @@
 namespace ScrapingService\Amazon\Crawler;
 
 use GuzzleHttp\Client;
-use ScrapingService\Amazon\Configuration\CrawlerConfiguration;
+use ScrapingService\Amazon\Crawler\Configuration\ProductPageCrawlerConfiguration;
 
 class GuzzleCrawler implements Crawler
 {
@@ -11,7 +11,7 @@ class GuzzleCrawler implements Crawler
      * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function crawl(CrawlerConfiguration $configuration): string
+    public function crawl(ProductPageCrawlerConfiguration $configuration): string
     {
         $client = new Client();
         $response = $client->request(

@@ -2,9 +2,9 @@
 
 namespace ScrapingService\Amazon\Crawler;
 
-use ScrapingService\Amazon\Configuration\CrawlerConfiguration;
+use ScrapingService\Amazon\Crawler\Configuration\ProductPageCrawlerConfiguration;
 
 interface Crawler
 {
-    public function crawl(CrawlerConfiguration $configuration): string;
+    public function crawl(ProductPageCrawlerConfiguration $configuration): string;
 }

@@ -2,10 +2,11 @@
 
 namespace ScrapingService\Amazon\Service;
 
-use ScrapingService\Amazon\Configuration\CrawlerConfiguration;
+use ScrapingService\Amazon\Crawler\Configuration\ProductPageCrawlerConfiguration;
 use ScrapingService\Amazon\Crawler\Crawler;
 use ScrapingService\Amazon\DTO\Product;
-use ScrapingService\Amazon\Scraper\ScraperFacade;
+use ScrapingService\Amazon\Request\ProductRequest;
+use ScrapingService\Amazon\Scraper\ScraperFactory;
 
 class AmazonService
 {
@@ -14,24 +15,26 @@ class AmazonService
      */
     private $crawler;
     /**
-     * @var ScraperFacade
+     * @var ScraperFactory
      */
-    private $scraperFacade;
+    private $scraperFactory;
 
     /**
      * AmazonService constructor.
      */
-    public function __construct(Crawler $crawler, ScraperFacade $scraperFacade)
+    public function __construct(Crawler $crawler, ScraperFactory $scraperFactory)
     {
         $this->crawler = $crawler;
-        $this->scraperFacade = $scraperFacade;
+        $this->scraperFactory = $scraperFactory;
     }
 
-    public function fetch(CrawlerConfiguration $request): Product
+    public function fetch(ProductRequest $request): Product
     {
-        return $this->scraperFacade->scrapProduct(
-            $this->crawler->crawl($request),
-            $request->getLocale()
+        $body = $this->crawler->crawl(
+            ProductPageCrawlerConfiguration::fromProductRequest($request)
         );
+
+        $scraper = $this->scraperFactory->getForLocale($request->getLocale());
+        return $scraper->scrapProduct($body);
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-namespace ScrapingService\Controller\Request;
+namespace ScrapingService\Amazon\Request;
 
-use ScrapingService\Amazon\Configuration\CrawlerConfiguration;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ProductRequest implements CrawlerConfiguration
+class ProductRequest
 {
     /**
      * @Assert\EqualTo(value="de", message="Only 'de' is currently supported.")
